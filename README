@@ -1,0 +1,59 @@
+
+= quilt
+
+
+== Description
+a library for generating identicon.
+
+
+Identicon: http://en.wikipedia.org/wiki/Identicon
+
+== Installation
+Required RMagick or ruby-gd.
+
+=== Archive Installation
+
+	rake install
+
+=== Gem Installation
+
+	gem install quilt
+
+
+== Features/Problems
+* Output file type is PNG only.
+
+== Synopsis
+
+	# input: any string
+	# output: 15 * 15 png (default)
+	identicon = Quilt::Identicon.new 'sample'
+	identicon.write 'sample15_15.png'
+
+	# input: identicon code(32 bit integer)
+	# output: 15 * 15 png (default)
+	identicon = Quilt::Identicon.new 1, :type => :code
+	identicon.write 'sample15_15_code.png'
+
+	# input: ip address
+	identicon = Quilt::Identicon.new '100.100.100.100', :type => :ip
+	identicon.write 'sample15_15_ip.png'
+
+	# output: 150 * 150 png
+	identicon = Quilt::Identicon.new 'sample', :scale => 10
+	identicon.write 'sample150_150.png'
+
+	# output: blob
+	identicon = Quilt::Identicon.new 'sample'
+	print identicon.to_blob
+
+	# change image library to Rmagick to  GD
+	Quilt::Identicon.image_lib = Quilt::ImageGD
+	identicon = Quilt::Identicon.new 'sample'
+	identicon.write 'sample15_15_gd.png'
+
+== Copyright
+
+Author::    swdyh <youhei@gmail.com>
+Copyright:: Copyright (c) 2008 swdyh
+License::   The MIT License
