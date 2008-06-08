@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'rubygems'
 require 'digest/sha1'
 
@@ -34,12 +35,15 @@ module Quilt
     end
 
     def write path
-      # @image.write path
       open(path, 'w') {|f| f.puts @image.to_blob }
     end
 
     def to_blob
       @image.to_blob
+    end
+
+    def resize size
+      @image.resize! size, size
     end
   end
 
@@ -78,6 +82,13 @@ module Quilt
     def to_blob
       @image.pngStr
     end
+
+    def resize size
+      _image = GD::Image.new size, size
+      # FIXME bug
+      @image.copyResized _image, 0, 0, 0, 0, size, size, @image.width, @image.height
+      @image = _image
+    end
   end
 
   class Identicon
@@ -115,13 +126,24 @@ module Quilt
         @code = Identicon.calc_code str.to_s
       end
       @decode = decode @code
-      @scale = opt[:scale] || 1
+
+      if opt[:size]
+        @scale = (((opt[:size] / 3) - 1) / (PATCH_SIZE - 1)) + 1
+        @resize_to = opt[:size]
+      else
+        @scale = opt[:scale] || 1
+      end
+
       @patch_width = (PATCH_SIZE - 1) * @scale + 1
       @image = @@image_lib.new @patch_width * 3, @patch_width * 3
       @back_color = @image.color 255, 255, 255
       @fore_color = @image.color @decode[:red], @decode[:green], @decode[:blue]
       @image.transparent @back_color
       render
+
+      if @resize_to
+        @image.resize @resize_to
+      end
     end
 
     def decode code

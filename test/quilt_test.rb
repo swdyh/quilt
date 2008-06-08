@@ -70,4 +70,19 @@ class QultTest < Test::Unit::TestCase
       assert_equal salt, Quilt::Identicon.salt
     end
   end
+
+  def test_size_opt_im
+    size = 100
+    Quilt::Identicon.image_lib = Quilt::ImageRmagick
+    identicon = Quilt::Identicon.new 'foo', :size => size
+    assert_equal size, identicon.instance_variable_get(:@image).instance_variable_get(:@image).rows
+    assert_equal size, identicon.instance_variable_get(:@image).instance_variable_get(:@image).columns
+  end
+
+  def test_size_opt_gd
+    Quilt::Identicon.image_lib = Quilt::ImageGD
+    identicon = Quilt::Identicon.new 'foo', :size => size
+    assert_equal size, identicon.instance_variable_get(:@image).instance_variable_get(:@image).width
+    assert_equal size, identicon.instance_variable_get(:@image).instance_variable_get(:@image).height
+  end
 end
