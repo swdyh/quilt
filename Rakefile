@@ -8,7 +8,7 @@ require 'rake/rdoctask'
 require 'rake/contrib/rubyforgepublisher'
 require 'rake/contrib/sshpublisher'
 require 'fileutils'
-require 'rubyforge'
+require 'date'
 include FileUtils
 
 NAME              = "quilt"
@@ -27,7 +27,7 @@ RDOC_OPTS = [
 	"--charset", "utf-8",
 	"--opname", "index.html",
 	"--line-numbers",
-	"--main", "README",
+	"--main", "README.rdoc",
 	"--inline-source",
 ]
 
@@ -45,7 +45,7 @@ spec = Gem::Specification.new do |s|
 	s.version           = VERS
 	s.platform          = Gem::Platform::RUBY
 	s.has_rdoc          = true
-	s.extra_rdoc_files  = ["README", "ChangeLog", "MIT-LICENSE"]
+	s.extra_rdoc_files  = ["README.rdoc", "ChangeLog", "MIT-LICENSE"]
 	s.rdoc_options     += RDOC_OPTS + ['--exclude', '^(examples|extras)/']
 	s.summary           = DESCRIPTION
 	s.description       = DESCRIPTION
@@ -62,7 +62,7 @@ spec = Gem::Specification.new do |s|
 	#s.add_dependency('activesupport', '>=1.3.1')
 	#s.required_ruby_version = '>= 1.8.2'
 
-	s.files = %w(README ChangeLog Rakefile) +
+	s.files = %w(README.rdoc ChangeLog Rakefile) +
 		Dir.glob("{bin,doc,test,lib,templates,generator,extras,website,script}/**/*") + 
 		Dir.glob("ext/**/*.{h,c,rb}") +
 		Dir.glob("examples/**/*.rb") +
@@ -95,7 +95,7 @@ Rake::RDocTask.new do |rdoc|
 	if ENV['DOC_FILES']
 		rdoc.rdoc_files.include(ENV['DOC_FILES'].split(/,\s*/))
 	else
-		rdoc.rdoc_files.include('README', 'ChangeLog')
+		rdoc.rdoc_files.include('README.rdoc', 'ChangeLog')
 		rdoc.rdoc_files.include('lib/**/*.rb')
 		rdoc.rdoc_files.include('ext/**/*.c')
 	end
