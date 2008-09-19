@@ -18,7 +18,7 @@ DESCRIPTION       = "a library for generating identicon."
 RUBYFORGE_PROJECT = "quilt"
 HOMEPATH          = "http://#{RUBYFORGE_PROJECT}.rubyforge.org"
 BIN_FILES         = %w(  )
-VERS              = "0.0.2"
+VERS              = "0.0.3"
 
 REV = File.read(".svn/entries")[/committed-rev="(d+)"/, 1] rescue nil
 CLEAN.include ['**/.*.sw?', '*.gem', '.config']
@@ -132,7 +132,11 @@ task :release => [:clean, :package] do |t|
 end
 
 desc 'Show information about the gem.'
-task :debug_gem do
+task :debug_gemspec do
 	puts spec.to_ruby
 end
 
+desc 'Update information about the gem.'
+task :update_gemspec do
+  open("#{NAME}.gemspec", 'w') { |f| f.puts spec.to_ruby }
+end
