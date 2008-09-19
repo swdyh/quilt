@@ -128,13 +128,13 @@ module Quilt
       @decode = decode @code
 
       if opt[:size]
-        @scale = (((opt[:size] / 3) - 1) / (PATCH_SIZE - 1)) + 1
+        @scale = (opt[:size].to_f / (PATCH_SIZE * 3)).ceil
         @resize_to = opt[:size]
       else
         @scale = opt[:scale] || 1
       end
 
-      @patch_width = (PATCH_SIZE - 1) * @scale + 1
+      @patch_width = PATCH_SIZE * @scale
       @image = @@image_lib.new @patch_width * 3, @patch_width * 3
       @back_color = @image.color 255, 255, 255
       @fore_color = @image.color @decode[:red], @decode[:green], @decode[:blue]
@@ -194,22 +194,23 @@ module Quilt
       else
         fore, back = @fore_color, @back_color
       end
-      @image.fill_rect(x, y, x + @patch_width, y + @patch_width, back)
+      @image.fill_rect(x, y, x + @patch_width - 1, y + @patch_width - 1, back)
 
       points = []
       PATCHES[patch].each do |pt|
         dx = pt % PATCH_SIZE
         dy = pt / PATCH_SIZE
-        px = dx.to_f / (PATCH_SIZE - 1) * @patch_width
-        py = dy.to_f / (PATCH_SIZE - 1) * @patch_width
+        len = @patch_width - 1
+        px = dx.to_f / (PATCH_SIZE - 1) * len
+        py = dy.to_f / (PATCH_SIZE - 1) * len
 
         case turn
         when 1
-          px, py = @patch_width - py, px
+          px, py = len - py, px
         when 2
-          px, py = @patch_width - px, @patch_width - py
+          px, py = len - px, len - py
         when 3
-          px, py = py, @patch_width - px
+          px, py = py, len - px
         end
         points << [x + px, y + py]
       end
