@@ -128,8 +128,7 @@ module Quilt
       @decode = decode @code
 
       if opt[:size]
-        @scale = (opt[:size].to_f / (PATCH_SIZE * 3)).ceil
-        @resize_to = opt[:size]
+        @scale = opt[:size].to_f / (PATCH_SIZE * 3)
       else
         @scale = opt[:scale] || 1
       end
@@ -140,10 +139,6 @@ module Quilt
       @fore_color = @image.color @decode[:red], @decode[:green], @decode[:blue]
       @image.transparent @back_color
       render
-
-      if @resize_to
-        @image.resize @resize_to
-      end
     end
 
     def decode code
