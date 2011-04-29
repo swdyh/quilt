@@ -35,7 +35,7 @@ module Quilt
     end
 
     def write path
-      open(path, 'w') {|f| f.puts @image.to_blob }
+      open(path, 'wb') {|f| f.write @image.to_blob }
     end
 
     def to_blob
