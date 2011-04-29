@@ -234,8 +234,13 @@ module Quilt
     end
 
     def self.extract_code list
-      tmp = [list[0].to_i << 24, list[1].to_i << 16,
-             list[2].to_i << 8, list[3].to_i]
+      if list.respond_to? :getbyte
+        tmp = [list.getbyte(0) << 24, list.getbyte(1) << 16,
+               list.getbyte(2) << 8, list.getbyte(3)]
+      else
+        tmp = [list[0].to_i << 24, list[1].to_i << 16,
+               list[2].to_i << 8, list[3].to_i]
+      end
       tmp.inject(0) do |r, i|
         r | ((i[31] == 1) ? -(i & 0x7fffffff) : i)
       end
