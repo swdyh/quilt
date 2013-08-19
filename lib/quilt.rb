@@ -10,7 +10,7 @@ module Quilt
       rescue LoadError
         require 'RMagick'
       rescue LoadError
-        puts "WARNING: Failed to require rmagick, image processing may fail!"
+        puts "WARNING: Failed to require rmagick, image generation will fail"
       end
       @image = Magick::Image.new width, height
       @image.format = 'png'
