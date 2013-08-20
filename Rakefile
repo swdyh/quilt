@@ -18,7 +18,7 @@ DESCRIPTION       = "a library for generating identicon."
 RUBYFORGE_PROJECT = "quilt"
 HOMEPATH          = "http://#{RUBYFORGE_PROJECT}.rubyforge.org"
 BIN_FILES         = %w(  )
-VERS              = "0.0.4"
+VERS              = "0.0.7"
 
 REV = File.read(".svn/entries")[/committed-rev="(d+)"/, 1] rescue nil
 CLEAN.include ['**/.*.sw?', '*.gem', '.config']
