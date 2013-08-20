@@ -1,12 +1,13 @@
 require 'rubygems'
 require 'rake'
-require 'rake/clean'
+#require 'rake/clean'
 require 'rake/testtask'
 #require 'rake/packagetask'
 #require 'rubygems/package_task'
 #require 'rake/rdoctask'
 #require 'rake/contrib/rubyforgepublisher'
 #require 'rake/contrib/sshpublisher'
+require 'bundler/gem_tasks'
 require 'fileutils'
 require 'date'
 include FileUtils
@@ -14,14 +15,15 @@ include FileUtils
 NAME              = "quilt"
 AUTHOR            = "swdyh"
 EMAIL             = "youhei@gmail.com"
-DESCRIPTION       = "a library for generating identicon."
-RUBYFORGE_PROJECT = "quilt"
 HOMEPATH          = "https://github.com/swdyh/quilt"
+SUMMARY           = "A Ruby library for generating identicon."
+DESCRIPTION       = SUMMARY + "\n" + HOMEPATH
+# RUBYFORGE_PROJECT = "quilt"
 BIN_FILES         = %w(  )
 VERS              = "0.0.7"
 
 REV = File.read(".svn/entries")[/committed-rev="(d+)"/, 1] rescue nil
-CLEAN.include ['**/.*.sw?', '*.gem', '.config']
+#CLEAN.include ['**/.*.sw?', '*.gem', '.config']
 RDOC_OPTS = [
 	'--title', "#{NAME} documentation",
 	"--charset", "utf-8",
@@ -53,14 +55,15 @@ spec = Gem::Specification.new do |s|
 	s.email             = EMAIL
 	s.homepage          = HOMEPATH
 	s.executables       = BIN_FILES
-	s.rubyforge_project = RUBYFORGE_PROJECT
+#	s.rubyforge_project = RUBYFORGE_PROJECT
 	s.bindir            = "bin"
 	s.require_path      = "lib"
 #	s.autorequire       = ""
 	s.test_files        = Dir["test/test_*.rb"]
-
+	s.license = "MIT"
 	#s.add_dependency('activesupport', '>=1.3.1')
 	#s.required_ruby_version = '>= 1.8.2'
+	s.add_development_dependency "bundler"
 	s.add_development_dependency "rmagick"
 	s.add_development_dependency "ruby-gd"
 
@@ -78,16 +81,15 @@ end
 # 	p.gem_spec = spec
 # end
 
-task :install do
-	name = "#{NAME}-#{VERS}.gem"
-	sh %{rake package}
-	sh %{sudo gem install pkg/#{name}}
-end
+# task :install do
+# 	name = "#{NAME}-#{VERS}.gem"
+# 	sh %{rake package}
+# 	sh %{sudo gem install pkg/#{name}}
+# end
 
-task :uninstall => [:clean] do
-	sh %{sudo gem uninstall #{NAME}}
-end
-
+# task :uninstall => [:clean] do
+# 	sh %{sudo gem uninstall #{NAME}}
+# end
 
 # Rake::RDocTask.new do |rdoc|
 # 	rdoc.rdoc_dir = 'html'
@@ -135,7 +137,7 @@ end
 
 desc 'Show information about the gem.'
 task :debug_gemspec do
-	puts spec.to_ruby
+  puts spec.to_ruby
 end
 
 desc 'Update information about the gem.'
@@ -143,6 +145,4 @@ task :update_gemspec do
   open("#{NAME}.gemspec", 'w') { |f| f.puts spec.to_ruby }
 end
 
-task :gemspecc => "build/#{spec.name}-#{spec.version}.gem" do
-    puts "generated latest version"
-end
+task :update => [:update_gemspec, :build]
