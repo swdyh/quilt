@@ -8,3 +8,5 @@ rvm:
 branches:
   only:
     - travis
+before_install:
+  - sudo apt-get install libgd2-noxpm-dev
