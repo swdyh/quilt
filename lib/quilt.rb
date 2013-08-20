@@ -5,7 +5,13 @@ require 'digest/sha1'
 module Quilt
   class ImageRmagick
     def initialize width, height
-      require 'RMagick'
+      begin
+        require 'rmagick'
+      rescue LoadError
+        require 'RMagick'
+      rescue LoadError
+        puts "WARNING: Failed to require rmagick, image generation will fail"
+      end
       @image = Magick::Image.new width, height
       @image.format = 'png'
     end
