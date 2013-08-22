@@ -2,21 +2,19 @@
 
 Gem::Specification.new do |s|
   s.name = "quilt"
-  s.version = "0.0.7"
+  s.version = "0.0.8"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["swdyh"]
-  s.date = "2013-08-20"
+  s.date = "2013-08-22"
   s.description = "A Ruby library for generating identicon.\nhttps://github.com/swdyh/quilt"
   s.email = "youhei@gmail.com"
-  s.extra_rdoc_files = ["README.rdoc", "ChangeLog", "MIT-LICENSE"]
-  s.files = ["README.rdoc", "ChangeLog", "Rakefile", "test/quilt_test.rb", "test/test_helper.rb", "lib/quilt.rb", "examples/gen.rb", "MIT-LICENSE"]
+  s.files = [".travis.yml", "ChangeLog", "Gemfile", "MIT-LICENSE", "README.md", "Rakefile", "lib/quilt.rb", "quilt.gemspec", "test/quilt_test.rb", "test/test_helper.rb"]
   s.homepage = "https://github.com/swdyh/quilt"
   s.licenses = ["MIT"]
-  s.rdoc_options = ["--title", "quilt documentation", "--charset", "utf-8", "--opname", "index.html", "--line-numbers", "--main", "README.rdoc", "--inline-source", "--exclude", "^(examples|extras)/"]
   s.require_paths = ["lib"]
   s.rubygems_version = "2.0.7"
-  s.summary = "A Ruby library for generating identicon. https://github.com/swdyh/quilt"
+  s.summary = "A Ruby library for generating identicon."
   s.test_files = ["test/test_helper.rb"]
 
   if s.respond_to? :specification_version then
@@ -26,17 +24,14 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<bundler>, [">= 0"])
       s.add_development_dependency(%q<rake>, [">= 0"])
       s.add_development_dependency(%q<rmagick>, [">= 0"])
-      s.add_development_dependency(%q<ruby-gd>, [">= 0"])
     else
       s.add_dependency(%q<bundler>, [">= 0"])
       s.add_dependency(%q<rake>, [">= 0"])
       s.add_dependency(%q<rmagick>, [">= 0"])
-      s.add_dependency(%q<ruby-gd>, [">= 0"])
     end
   else
     s.add_dependency(%q<bundler>, [">= 0"])
     s.add_dependency(%q<rake>, [">= 0"])
     s.add_dependency(%q<rmagick>, [">= 0"])
-    s.add_dependency(%q<ruby-gd>, [">= 0"])
   end
 end

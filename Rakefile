@@ -4,7 +4,7 @@ require 'bundler/gem_tasks'
 
 spec = Gem::Specification.new do |s|
   s.name              = "quilt"
-  s.version           = "0.0.7"
+  s.version           = "0.0.8"
   s.platform          = Gem::Platform::RUBY
   s.has_rdoc          = false
   s.summary           = "A Ruby library for generating identicon."
