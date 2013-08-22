@@ -6,7 +6,7 @@ rvm:
   - ruby-head
 branches:
   only:
-    - travis
+    - master
 before_install:
   - sudo apt-get install libgd2-noxpm-dev
 matrix:
