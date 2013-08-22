@@ -80,6 +80,7 @@ class QultTest < Test::Unit::TestCase
   end
 
   def test_size_opt_gd
+    size = 100
     Quilt::Identicon.image_lib = Quilt::ImageGD
     identicon = Quilt::Identicon.new 'foo', :size => size
     assert_equal size, identicon.instance_variable_get(:@image).instance_variable_get(:@image).width
