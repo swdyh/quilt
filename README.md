@@ -1,6 +1,6 @@
 # quilt
 
-![sample01](http://swdyh.github.io/quilt/sample/quilt-01.png) ![sample02](http://swdyh.github.io/quilt/sample/quilt-02.png) ![sample03](http://swdyh.github.io/quilt/sample/quilt-03.png) ![sample04](http://swdyh.github.io/quilt/sample/quilt-04.png) ![sample05](http://swdyh.github.io/quilt/sample/quilt-05.png)
+![sample02](http://swdyh.github.io/quilt/sample/quilt-02.png) ![sample03](http://swdyh.github.io/quilt/sample/quilt-03.png) ![sample04](http://swdyh.github.io/quilt/sample/quilt-04.png) ![sample05](http://swdyh.github.io/quilt/sample/quilt-05.png)
 
 [![Build Status](https://travis-ci.org/swdyh/quilt.png?branch=master)](https://travis-ci.org/swdyh/quilt)
 
