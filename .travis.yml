@@ -9,3 +9,6 @@ branches:
     - travis
 before_install:
   - sudo apt-get install libgd2-noxpm-dev
+matrix:
+  allow_failures:
+    - rvm: ruby-head
