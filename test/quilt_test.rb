@@ -49,7 +49,7 @@ class QultTest < Test::Unit::TestCase
 
   def test_image_lib
     image_other = Class.new do
-      def initialize a, b; end
+      def initialize a, b, opt = {}; end
       def method_missing *arg; end
       def write path; open(path, 'w') {|f| f.puts 'other' }; end
     end

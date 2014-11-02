@@ -4,7 +4,7 @@ require 'digest/sha1'
 
 module Quilt
   class ImageRmagick
-    def initialize width, height
+    def initialize width, height, opt = {}
       begin
         require 'rmagick'
       rescue LoadError
@@ -12,7 +12,9 @@ module Quilt
       rescue LoadError
         puts "WARNING: Failed to require rmagick, image generation will fail"
       end
-      @image = Magick::Image.new width, height
+      @image = Magick::Image.new width, height do |c|
+        c.background_color = 'Transparent' if opt[:transparent]
+      end
       @image.format = 'png'
     end
 
@@ -40,6 +42,18 @@ module Quilt
       end
     end
 
+    def polygon_clip points
+      clip_img = Magick::Image.new(@image.rows, @image.rows)
+      dr = Magick::Draw.new
+      dr.polygon(*points)
+      dr.draw(clip_img)
+      clip_img_t = clip_img.transparent('white', Magick::TransparentOpacity)
+      f = @image.format
+      @image = clip_img_t.composite(@image,
+        Magick::CenterGravity, Magick::OutCompositeOp)
+      @image.format = f
+    end
+
     def write path
       open(path, 'wb') {|f| f.write @image.to_blob }
     end
@@ -54,7 +68,7 @@ module Quilt
   end
 
   class ImageGD
-    def initialize width, height
+    def initialize width, height, opt = {}
       require 'GD'
       @image = GD::Image.new width, height
     end
@@ -139,11 +153,11 @@ module Quilt
         @scale = opt[:scale] || 1
       end
 
+      @transparent = !!opt[:transparent]
       @patch_width = PATCH_SIZE * @scale
-      @image = @@image_lib.new @patch_width * 3, @patch_width * 3
+      @image = @@image_lib.new @patch_width * 3, @patch_width * 3, :transparent => @transparent
       @back_color = @image.color 255, 255, 255
       @fore_color = @image.color @decode[:red], @decode[:green], @decode[:blue]
-      @image.transparent @back_color
       render
     end
 
@@ -195,6 +209,10 @@ module Quilt
       else
         fore, back = @fore_color, @back_color
       end
+
+      if @transparent && back == @back_color
+        back = 'Transparent'
+      end
       @image.fill_rect(x, y, x + @patch_width - 1, y + @patch_width - 1, back)
 
       points = []
@@ -215,7 +233,16 @@ module Quilt
         end
         points << [x + px, y + py]
       end
-      @image.polygon points, fore
+
+      if @transparent && @@image_lib == Quilt::ImageRmagick
+        if fore == @back_color
+          @image.polygon_clip points
+        else
+          @image.polygon points, fore
+        end
+      else
+        @image.polygon points, fore
+      end
     end
 
     def write path = "#{@code}.png"
@@ -269,4 +296,3 @@ module Quilt
     end
   end
 end
-
