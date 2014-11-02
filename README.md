@@ -8,8 +8,12 @@ A Ruby library for generating identicon.
 
 Identicon: http://en.wikipedia.org/wiki/Identicon
 
+## Updates
+
+2014-11-03T02:05:32+09:00 Add transparent background option
+
 ## Installation
-Required rmagick or ruby-gd.
+Required rmagick or ruby-gd. (default rmagick)
 
     gem install quilt
 
@@ -41,6 +45,11 @@ Required rmagick or ruby-gd.
     Quilt::Identicon.image_lib = Quilt::ImageGD
     identicon = Quilt::Identicon.new 'sample'
     identicon.write 'sample15_15_gd.png'
+
+    # output: 150 * 150 png tranparent background
+    identicon = Quilt::Identicon.new 'sample', :scale => 10,  :transparent => true
+    identicon.write 'sample_t_150_150.png'
+
 
 ## Information
 
