@@ -43,15 +43,17 @@ module Quilt
     end
 
     def polygon_clip points
-      clip_img = Magick::Image.new(@image.rows, @image.rows)
-      dr = Magick::Draw.new
-      dr.polygon(*points)
-      dr.draw(clip_img)
-      clip_img_t = clip_img.transparent('white', Magick::TransparentOpacity)
-      f = @image.format
-      @image = clip_img_t.composite(@image,
-        Magick::CenterGravity, Magick::OutCompositeOp)
-      @image.format = f
+      unless points.empty?
+        clip_img = Magick::Image.new(@image.rows, @image.rows)
+        dr = Magick::Draw.new
+        dr.polygon(*points.flatten)
+        dr.draw(clip_img)
+        clip_img_t = clip_img.transparent('white', Magick::TransparentOpacity)
+        f = @image.format
+        @image = clip_img_t.composite(@image,
+          Magick::CenterGravity, Magick::OutCompositeOp)
+        @image.format = f
+      end
     end
 
     def write path
