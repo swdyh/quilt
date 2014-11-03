@@ -2,18 +2,18 @@
 
 Gem::Specification.new do |s|
   s.name = "quilt"
-  s.version = "0.0.8"
+  s.version = "0.0.9"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["swdyh"]
-  s.date = "2013-08-22"
+  s.date = "2014-11-02"
   s.description = "A Ruby library for generating identicon.\nhttps://github.com/swdyh/quilt"
   s.email = "youhei@gmail.com"
   s.files = [".travis.yml", "ChangeLog", "Gemfile", "MIT-LICENSE", "README.md", "Rakefile", "lib/quilt.rb", "quilt.gemspec", "test/quilt_test.rb", "test/test_helper.rb"]
   s.homepage = "https://github.com/swdyh/quilt"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "2.0.7"
+  s.rubygems_version = "2.0.2"
   s.summary = "A Ruby library for generating identicon."
   s.test_files = ["test/test_helper.rb"]
 
