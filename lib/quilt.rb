@@ -3,6 +3,65 @@ require 'rubygems'
 require 'digest/sha1'
 
 module Quilt
+  class ImageSVG
+    def initialize width, height, opt = {}
+      @transparent = !!opt[:transparent]
+      @mask = @transparent ? %(mask="clip") : ''
+      @masks = ''
+      @image = ''
+      @width = width
+      @height = height
+      @head = %(<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 #{width} #{height}">\n)
+    end
+
+    def color r, g, b
+      "rgb(%d, %d, %d)" % [r, g, b]
+    end
+
+    def fill_rect x, y, _x, _y, color
+      color = 'none' if color == 'Transparent'
+      @image << %(<rect x="#{x}" y="#{y}" width="#{_x - x}" height="#{_y - y}" fill="#{color}" stroke-width="0" stroke="white" mask="url(#clip)"/>\n)
+    end
+
+    def polygon points, color
+      unless points.empty?
+        ps = points.map { |i| i.join(',') }.join(' ')
+        @image << %(<polygon points="#{ps}" stroke-width="0" fill="#{color}" mask="(#clip)"/>\n)
+      end
+    end
+
+    def polygon_clip points
+      unless points.empty?
+        ps = points.map { |i| i.join(',') }.join(' ')
+        @masks << %(<polygon points="#{ps}" stroke-width="0"/>\n)
+      end
+    end
+
+    def write path
+      open(path, 'wb') {|f| f.write self.to_blob }
+    end
+
+    def to_blob
+      if @transparent
+        @head + build_mask + @image + "\n</svg>"
+      else
+        @head + @image + "\n</svg>"
+      end
+    end
+
+    private
+    def build_mask
+      <<-EOS
+   <mask id="clip" maskUnits="userSpaceOnUse" x="0" y="0" width="#{@width}" height="#{@height}">
+     <g fill="black" fill-rule="evenodd">
+       <rect x="0" y="0" width="#{@width}" height="#{@height}" fill="white"/>
+       #{@masks}
+     </g>
+   </mask>
+EOS
+    end
+  end
+
   class ImageRmagick
     def initialize width, height, opt = {}
       begin
@@ -215,13 +274,16 @@ module Quilt
       if @transparent && back == @back_color
         back = 'Transparent'
       end
-      @image.fill_rect(x, y, x + @patch_width - 1, y + @patch_width - 1, back)
+
+      offset = (@@image_lib == Quilt::ImageSVG) ? 0 : 1
+      @image.fill_rect(x, y, x + @patch_width - offset,
+        y + @patch_width - offset, back)
 
       points = []
       PATCHES[patch].each do |pt|
         dx = pt % PATCH_SIZE
         dy = pt / PATCH_SIZE
-        len = @patch_width - 1
+        len = @patch_width - offset
         px = dx.to_f / (PATCH_SIZE - 1) * len
         py = dy.to_f / (PATCH_SIZE - 1) * len
 
@@ -236,7 +298,8 @@ module Quilt
         points << [x + px, y + py]
       end
 
-      if @transparent && @@image_lib == Quilt::ImageRmagick
+      if @transparent && (@@image_lib == Quilt::ImageRmagick ||
+          @@image_lib == Quilt::ImageSVG)
         if fore == @back_color
           @image.polygon_clip points
         else
