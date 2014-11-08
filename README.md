@@ -10,6 +10,7 @@ Identicon: http://en.wikipedia.org/wiki/Identicon
 
 ## Updates
 
+2014-11-09T00:44:08+09:00 Add SVG support
 2014-11-03T02:05:32+09:00 Add transparent background option
 
 ## Installation
@@ -41,15 +42,22 @@ Required rmagick or ruby-gd. (default rmagick)
     identicon = Quilt::Identicon.new 'sample'
     print identicon.to_blob
 
-    # change image library to Rmagick to  GD
-    Quilt::Identicon.image_lib = Quilt::ImageGD
-    identicon = Quilt::Identicon.new 'sample'
-    identicon.write 'sample15_15_gd.png'
-
     # output: 150 * 150 png tranparent background
     identicon = Quilt::Identicon.new 'sample', :scale => 10,  :transparent => true
     identicon.write 'sample_t_150_150.png'
 
+    # output: 150 * 150 svg
+    identicon = Quilt::Identicon.new 'sample', :scale => 10, :format => 'svg'
+    identicon.write 'sample_150_150.svg'
+
+    # output: 150 * 150 svg tranparent background
+    identicon = Quilt::Identicon.new 'sample', :scale => 10,  :transparent => true, :format => 'svg'
+    identicon.write 'sample_150_150_t.svg'
+
+    # change image library to Rmagick to GD
+    Quilt::Identicon.image_lib = Quilt::ImageGD
+    identicon = Quilt::Identicon.new 'sample'
+    identicon.write 'sample15_15_gd.png'
 
 ## Information
 
