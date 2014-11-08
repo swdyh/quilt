@@ -19,7 +19,6 @@ module Quilt
     end
 
     def fill_rect x, y, _x, _y, color
-      color = 'none' if color == 'Transparent'
       @image << %(<rect x="#{x}" y="#{y}" width="#{_x - x}" height="#{_y - y}" fill="#{color}" stroke-width="0" stroke="white" mask="url(#clip)"/>\n)
     end
 
@@ -214,9 +213,17 @@ EOS
         @scale = opt[:scale] || 1
       end
 
-      @transparent = !!opt[:transparent]
+      if opt[:format].to_s == 'svg'
+        @image_lib = ImageSVG
+      else
+        @image_lib = @@image_lib
+      end
+
+      @transparent = !!opt[:transparent] &&
+        [ImageRmagick, ImageSVG].include?(@image_lib)
       @patch_width = PATCH_SIZE * @scale
-      @image = @@image_lib.new @patch_width * 3, @patch_width * 3, :transparent => @transparent
+      @image = @image_lib.new(@patch_width * 3, @patch_width * 3,
+        :transparent => @transparent)
       @back_color = @image.color 255, 255, 255
       @fore_color = @image.color @decode[:red], @decode[:green], @decode[:blue]
       render
@@ -271,13 +278,12 @@ EOS
         fore, back = @fore_color, @back_color
       end
 
-      if @transparent && back == @back_color
-        back = 'Transparent'
-      end
+      offset = (@image_lib == Quilt::ImageSVG) ? 0 : 1
 
-      offset = (@@image_lib == Quilt::ImageSVG) ? 0 : 1
-      @image.fill_rect(x, y, x + @patch_width - offset,
-        y + @patch_width - offset, back)
+      if !(@transparent && back == @back_color)
+        @image.fill_rect(x, y, x + @patch_width - offset,
+          y + @patch_width - offset, back)
+      end
 
       points = []
       PATCHES[patch].each do |pt|
@@ -298,8 +304,7 @@ EOS
         points << [x + px, y + py]
       end
 
-      if @transparent && (@@image_lib == Quilt::ImageRmagick ||
-          @@image_lib == Quilt::ImageSVG)
+      if @transparent
         if fore == @back_color
           @image.polygon_clip points
         else
